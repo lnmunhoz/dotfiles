@@ -43,3 +43,9 @@ sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/i
 
 # Install other apps
 brew cask install firefox google-chrome sizeup dropbox skype spotify 1password mou sourcetree slack
+
+# After install sublime
+ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl
+
+
+
