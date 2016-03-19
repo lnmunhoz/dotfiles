@@ -3,21 +3,11 @@
         "debug": false,
         "delay": 0.25,
         "error_color": "D02000",
-        "gutter_theme": "Packages/SublimeLinter/gutter-themes/Default/Default.gutter-theme",
+        "gutter_theme": "Packages/SublimeLinter/gutter-themes/Blueberry/round/Blueberry - round.gutter-theme",
         "gutter_theme_excludes": [],
         "lint_mode": "background",
         "linters": {
             "eslint": {
-                "@disable": false,
-                "args": [],
-                "excludes": []
-            },
-            "eslint_d": {
-                "@disable": false,
-                "args": [],
-                "excludes": []
-            },
-            "jshint": {
                 "@disable": false,
                 "args": [],
                 "excludes": []
@@ -29,13 +19,15 @@
         "paths": {
             "linux": [],
             "osx": [
-                "/Users/lnmunhoz/.nvm/versions/node/v5.7.0/bin/node"
+                "/Users/lnmunhoz/.nvm/versions/node/v5.7.0/bin"
             ],
             "windows": []
         },
         "python_paths": {
             "linux": [],
-            "osx": [],
+            "osx": [
+                "/usr/bin/python"
+            ],
             "windows": []
         },
         "rc_search_limit": 3,
@@ -46,7 +38,7 @@
             "html (django)": "html",
             "html (rails)": "html",
             "html 5": "html",
-            "javascript (babel)": "javascript",
+            "javascript (Babel)": "javascript",
             "magicpython": "python",
             "php": "html",
             "python django": "python",
