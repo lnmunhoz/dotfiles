@@ -1,0 +1,42 @@
+# Slate configuration file
+# Be sure to customize! See https://github.com/jigish/slate#configuring-slate
+
+# Key aliases
+alias hyper ctrl;shift;alt;cmd
+
+# Application aliases
+alias browser       'Google Chrome'
+alias atom          'Atom Beta'
+alias slack         'Slack'
+alias dash          'Dash'
+alias spotify       'Spotify'
+alias franz         'Franz'
+alias sourcetree    'SourceTree'
+alias githubdesktop 'GitHub Desktop'
+alias robomongo     'Robomongo'
+alias balsamiq      'Balsamiq Mockups 3'
+alias vscode        'Code'
+alias station       'Station'
+alias robo3t        'Robo 3T'
+alias sketch        'Sketch'
+alias notion        'Notion'
+alias iterm         'iTerm2'
+alias graphql       'GraphQL Playground'
+alias floatingyoutube 'Floating for YouTube™'
+alias sublimetext3  'Sublime Text'
+
+# App bindings
+# These are laid out on the left hand
+
+bind c:${hyper}      focus ${vscode}
+bind p:${hyper}      focus ${sketch}
+bind f:${hyper}      focus ${browser}
+bind d:${hyper}      focus ${iterm}
+bind q:${hyper}      focus ${dash}
+bind s:${hyper}      focus ${slack}
+bind g:${hyper}      focus ${graphql}
+bind r:${hyper}      focus ${robo3t}
+bind m:${hyper}      focus ${spotify}
+bind b:${hyper}      focus ${balsamiq}
+bind n:${hyper}      focus ${notion}
+bind y:${hyper}      focus ${floatingyoutube}
