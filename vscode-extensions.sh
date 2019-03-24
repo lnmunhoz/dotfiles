@@ -1,9 +1,6 @@
 code --install-extension RobinMalfait.prettier-eslint-vscode
-code --install-extension akamud.vscode-theme-onedark
 code --install-extension apollographql.vscode-apollo
 code --install-extension attilabuti.vscode-mjml
-code --install-extension burkeholland.simple-timer
-code --install-extension christian-kohler.npm-intellisense
 code --install-extension CoenraadS.bracket-pair-colorizer
 code --install-extension cstuder.gitlab-ci-validator
 code --install-extension davidmart.theme-jsfiddle-like-syntax-vscode
@@ -45,7 +42,5 @@ code --install-extension Tyriar.lorem-ipsum
 code --install-extension vscode-icons-team.vscode-icons
 code --install-extension vstirbu.vscode-mermaid-preview
 code --install-extension WakaTime.vscode-wakatime
-code --install-extension WallabyJs.quokka-vscode
-code --install-extension WallabyJs.wallaby-vscode
 code --install-extension wix.glean
 code --install-extension zhuangtongfa.Material-theme
