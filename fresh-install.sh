@@ -9,19 +9,21 @@ git config --global credential.helper osxkeychain
 git config --global core.excludesfile '~/.gitignore'
 
 # Nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 # Apps
 brew cask install iterm2
-brew cask install slate
 brew cask install karabiner-elements
 brew cask install google-chrome
 brew cask install dropbox
-brew cask install 1password6
+brew cask install 1password7
 brew cask install authy
 brew cask install pgadmin4
-brew cask install robo3t
-brew cask install visual-studio-code
 brew cask install visual-studio-code
 
 
+# oh-my-zsh plugins
+git clone https://github.com/agkozak/zsh-z $ZSH_CUSTOM/plugins/zsh-z
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
