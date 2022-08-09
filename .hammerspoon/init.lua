@@ -96,21 +96,30 @@ setupArrowKeys = function()
   mapArrow('j', 'left', {})
   mapArrow('j', 'left', {'cmd'})
   mapArrow('j', 'left', {'alt'})
+  mapArrow('k', 'down', {'shift'})
   mapArrow('j', 'left', {'cmd', 'shift'})
   mapArrow('j', 'left', {'alt', 'shift'})
-  
 
   mapArrow('k', 'down', {})
   mapArrow('k', 'down', {'cmd'})
   mapArrow('k', 'down', {'alt'})
+  mapArrow('k', 'down', {'shift'})
+  mapArrow('k', 'down', {'cmd', 'shift'})
+  mapArrow('k', 'down', {'alt', 'shift'})
 
   mapArrow('l', 'right', {})
   mapArrow('l', 'right', {'cmd'})
   mapArrow('l', 'right', {'alt'})
+  mapArrow('l', 'right', {'shift'})
+  mapArrow('l', 'right', {'cmd', 'shift'})
+  mapArrow('l', 'right', {'alt', 'shift'})
 
   mapArrow('i', 'up', {})
   mapArrow('i', 'up', {'cmd'})
   mapArrow('i', 'up', {'alt'})
+  mapArrow('i', 'up', {'shift'})
+  mapArrow('i', 'up', {'cmd', 'shift'})
+  mapArrow('i', 'up', {'alt', 'shift'})
 end
 
 
