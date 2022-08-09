@@ -1,66 +1,47 @@
--- Mike Solomon @msol 2019
+-- Credits to:
+--  https://github.com/kkamdooong/hammerspoon-control-hjkl-to-arrow/blob/master/init.lua
+--  https://gist.github.com/xpgeng/2d5df178a479b19a54d1c274b5f7ebd9
 
 local log = hs.logger.new('main', 'info')
 DEVELOPING_THIS = false -- set to true to ease debugging
 
-HYPER = {'ctrl', 'shift', 'alt', 'cmd'}
+-- A global variable for the Hyper Mode
+k = hs.hotkey.modal.new({}, "F17")
 
--- App bindings
-function setUpAppBindings()
---   hyperFocusAll('w', 'React Native Debugger', 'Simulator', 'qemu-system-x86_64')
---   hyperFocusOrOpen('e', 'Notes')
---   hyperFocus('i', 'IntelliJ IDEA', 'IntelliJ IDEA-EAP', 'Xcode', 'Android Studio', 'Atom', 'Code')
-  hyperFocusOrOpen('a', 'Finder')
-  -- hyperFocusOrOpen('d', 'iTerm2')
-  hyperFocus('f', 'Google Chrome', 'Brave Browser')
-  hyperFocusOrOpen('c', 'Visual Studio Code')
+-- Trigger existing hyper key shortcuts
+k:bind({}, 'm', nil, function() hs.eventtap.keyStroke({"cmd","alt","shift","ctrl"}, 'm') end)
+
+-- Enter Hyper Mode when F18 (Hyper/Capslock) is pressed
+pressedF18 = function()
+  k.triggered = false
+  k:enter()
 end
 
--- Window management
-function setUpWindowManagement()
-  hs.window.animationDuration = 0 -- disable animationn
-  hs.grid.setMargins({0, 0})
-  hs.grid.setGrid('2x2')
 
-  function mkSetFocus(to)
-    return function() hs.grid.set(hs.window.focusedWindow(), to) end
+-- Leave Hyper Mode when F18 (Hyper/Capslock) is pressed,
+-- send ESCAPE if no other keys are pressed.
+releasedF18 = function()
+  k:exit()
+  if not k.triggered then
+    hs.eventtap.keyStroke({}, 'ESCAPE')
   end
-  
-
-  local fullScreen = hs.geometry("0,0 2x2")
-  local leftHalf = hs.geometry("0,0 1x2")
-  local rightHalf = hs.geometry("1,0 1x2")
-  local upperLeft = hs.geometry("0,0 1x1")
-  local lowerLeft = hs.geometry("0,1 1x1")
-  local upperRight = hs.geometry("1,0 1x1")
-  local lowerRight = hs.geometry("1,1 1x1")
-
-  hs.hotkey.bind(HYPER, 'l', mkSetFocus(fullScreen))
-  hs.hotkey.bind(HYPER, 'h', mkSetFocus(leftHalf))
-  hs.hotkey.bind(HYPER, "'", mkSetFocus(rightHalf))
-  hs.hotkey.bind(HYPER, "y", mkSetFocus(upperLeft))
-  hs.hotkey.bind(HYPER, "b", mkSetFocus(lowerLeft))
-  hs.hotkey.bind(HYPER, "u", mkSetFocus(upperRight))
-  hs.hotkey.bind(HYPER, "n", mkSetFocus(lowerRight))
-
-  hs.hotkey.bind(HYPER, "up", hs.window.filter.focusNorth)
-  hs.hotkey.bind(HYPER, "down", hs.window.filter.focusSouth)
-  hs.hotkey.bind(HYPER, "left", hs.window.filter.focusWest)
-  hs.hotkey.bind(HYPER, "right", hs.window.filter.focusEast)
-  -- hs.hotkey.bind(HYPER, "v", hs.window.filter.focusNorth)
-  -- hs.hotkey.bind(HYPER, "c", hs.window.filter.focusSouth)
-  -- hs.hotkey.bind(HYPER, "j", hs.window.filter.focusWest)
-  -- hs.hotkey.bind(HYPER, "p", hs.window.filter.focusEast)
-  hs.hotkey.bind(HYPER, "q", hs.hints.windowHints)
-  -- HYPER "d" -- Bound in Karabiner to Cmd+Tab (application switcher)
-  -- HYPER "k" -- Bound in Karabiner to Cmd+` (next window of application)
-
-  -- throw to other screen
-  hs.hotkey.bind(HYPER, 'o', function()
-    local window = hs.window.focusedWindow()
-    window:moveToScreen(window:screen():next())
-  end)
 end
+
+-- Bind the Hyper key
+f18 = hs.hotkey.bind({}, 'F18', pressedF18, releasedF18)
+
+-- Bind Hyper + hjkl as the arrows 
+arrowKey = function(arrow, modifiers) 
+  local event = require("hs.eventtap").event
+  event.newKeyEvent(modifiers, string.lower(arrow), true):post()
+  event.newKeyEvent(modifiers, string.lower(arrow), false):post()
+end
+
+mapArrow = function(key, arrow, modifiers)
+  k:bind(modifiers, key, function() arrowKey(arrow, modifiers); end, nil, function() arrowKey(arrow, modifiers); end)
+end
+
+
 
 -- focus on the last-focused window of the application given by name, or else launch it
 function hyperFocusOrOpen(key, app)
@@ -68,20 +49,20 @@ function hyperFocusOrOpen(key, app)
   function focusOrOpen()
     return (focus() or hs.application.launchOrFocus(app))
   end
-  hs.hotkey.bind(HYPER, key, focusOrOpen)
+  k:bind({}, key, focusOrOpen)
+  -- hs.hotkey.bind(HYPER, key, focusOrOpen)
 end
 
 -- focus on the last-focused window of the first application given by name
 function hyperFocus(key, ...)
-  hs.hotkey.bind(HYPER, key, mkFocusByPreferredApplicationTitle(true, ...))
+  k:bind({}, key, mkFocusByPreferredApplicationTitle(true, ...))
 end
 
 
 -- focus on the last-focused window of every application given by name
 function hyperFocusAll(key, ...)
-  hs.hotkey.bind(HYPER, key, mkFocusByPreferredApplicationTitle(false, ...))
+  k:bind({}, key, mkFocusByPreferredApplicationTitle(false, ...))
 end
-
 
 -- creates callback function to select application windows by application name
 function mkFocusByPreferredApplicationTitle(stopOnFirst, ...)
@@ -111,30 +92,35 @@ function mkFocusByPreferredApplicationTitle(stopOnFirst, ...)
   end
 end
 
+setupArrowKeys = function()
+  mapArrow('j', 'left', {})
+  mapArrow('j', 'left', {'cmd'})
+  mapArrow('j', 'left', {'alt'})
+  mapArrow('j', 'left', {'cmd', 'shift'})
+  mapArrow('j', 'left', {'alt', 'shift'})
+  
 
-function maybeEnableDebug()
-  if DEVELOPING_THIS then
-    log.setLogLevel('debug')
-    log.d('Loading in development mode')
-    -- automatically reload changes when we're developing
-    hs.pathwatcher.new(os.getenv('HOME') .. '/.hammerspoon/', hs.reload):start()
-    hs.alert('Hammerspoon config reloaded')
-    log:d('Hammerspoon config reloaded')
-  end
+  mapArrow('k', 'down', {})
+  mapArrow('k', 'down', {'cmd'})
+  mapArrow('k', 'down', {'alt'})
+
+  mapArrow('l', 'right', {})
+  mapArrow('l', 'right', {'cmd'})
+  mapArrow('l', 'right', {'alt'})
+
+  mapArrow('i', 'up', {})
+  mapArrow('i', 'up', {'cmd'})
+  mapArrow('i', 'up', {'alt'})
 end
 
-function setUpClipboardTool()
-  ClipboardTool = hs.loadSpoon('ClipboardTool')
-  ClipboardTool.show_in_menubar = false
-  ClipboardTool:start()
-  ClipboardTool:bindHotkeys({
-    toggle_clipboard = {HYPER, "p"}
-  })
+
+-- App bindings
+function setUpAppBindings()
+  hyperFocusOrOpen('a', 'Finder')
+  hyperFocusOrOpen('d', 'iTerm2')
+  hyperFocus('f', 'Google Chrome', 'Brave Browser')
+  hyperFocusOrOpen('c', 'Visual Studio Code')
 end
 
--- Main
-
-maybeEnableDebug()
 setUpAppBindings()
--- setUpWindowManagement()
--- setUpClipboardTool()
+setupArrowKeys()
