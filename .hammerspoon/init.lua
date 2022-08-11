@@ -6,24 +6,24 @@ local log = hs.logger.new('main', 'info')
 DEVELOPING_THIS = false -- set to true to ease debugging
 
 -- A global variable for the Hyper Mode
-k = hs.hotkey.modal.new({}, "F17")
+hyper = hs.hotkey.modal.new({}, "F17")
 
 -- Trigger existing hyper key shortcuts
-k:bind({}, 'm', nil, function() hs.eventtap.keyStroke({"cmd","alt","shift","ctrl"}, 'm') end)
+hyper:bind({}, 'm', nil, function() hs.eventtap.keyStroke({"cmd","alt","shift","ctrl"}, 'm') end)
 
 -- Enter Hyper Mode when F18 (Hyper/Capslock) is pressed
 pressedF18 = function()
-  k.triggered = false
-  k:enter()
+  hyper.triggered = false
+  hyper:enter()
 end
 
 
 -- Leave Hyper Mode when F18 (Hyper/Capslock) is pressed,
 -- send ESCAPE if no other keys are pressed.
 releasedF18 = function()
-  k:exit()
+  hyper:exit()
   if not k.triggered then
-    hs.eventtap.keyStroke({}, 'ESCAPE')
+    -- hs.eventtap.keyStroke({}, 'ESCAPE')
   end
 end
 
@@ -38,10 +38,8 @@ arrowKey = function(arrow, modifiers)
 end
 
 mapArrow = function(key, arrow, modifiers)
-  k:bind(modifiers, key, function() arrowKey(arrow, modifiers); end, nil, function() arrowKey(arrow, modifiers); end)
+  hyper:bind(modifiers, key, function() arrowKey(arrow, modifiers); end, nil, function() arrowKey(arrow, modifiers); end)
 end
-
-
 
 -- focus on the last-focused window of the application given by name, or else launch it
 function hyperFocusOrOpen(key, app)
@@ -49,19 +47,19 @@ function hyperFocusOrOpen(key, app)
   function focusOrOpen()
     return (focus() or hs.application.launchOrFocus(app))
   end
-  k:bind({}, key, focusOrOpen)
+  hyper:bind({}, key, focusOrOpen)
   -- hs.hotkey.bind(HYPER, key, focusOrOpen)
 end
 
 -- focus on the last-focused window of the first application given by name
 function hyperFocus(key, ...)
-  k:bind({}, key, mkFocusByPreferredApplicationTitle(true, ...))
+  hyper:bind({}, key, mkFocusByPreferredApplicationTitle(true, ...))
 end
 
 
 -- focus on the last-focused window of every application given by name
 function hyperFocusAll(key, ...)
-  k:bind({}, key, mkFocusByPreferredApplicationTitle(false, ...))
+  hyper:bind({}, key, mkFocusByPreferredApplicationTitle(false, ...))
 end
 
 -- creates callback function to select application windows by application name
@@ -92,7 +90,7 @@ function mkFocusByPreferredApplicationTitle(stopOnFirst, ...)
   end
 end
 
-setupArrowKeys = function()
+setupKeys = function()
   mapArrow('j', 'left', {})
   mapArrow('j', 'left', {'cmd'})
   mapArrow('j', 'left', {'alt'})
@@ -120,6 +118,61 @@ setupArrowKeys = function()
   mapArrow('i', 'up', {'shift'})
   mapArrow('i', 'up', {'cmd', 'shift'})
   mapArrow('i', 'up', {'alt', 'shift'})
+
+  hyperBind(
+    {}, 'space',
+    {'cmd', 'ctrl', 'alt', 'shift'}, 'space' 
+  )
+
+
+  hotkeyBind(
+    {'shift', 'alt'}, 'j', 
+    {'shift', 'alt'}, 'left'
+  )
+
+  hotkeyBind(
+    {'shift', 'cmd'}, 'j', 
+    {'shift', 'cmd'}, 'left'
+  )
+
+  hotkeyBind(
+    {'shift', 'alt'}, 'l', 
+    {'shift', 'alt'}, 'right'
+  )
+
+  hotkeyBind(
+    {'shift', 'cmd'}, 'l', 
+    {'shift', 'cmd'}, 'right'
+  )
+
+  hotkeyBind(
+    {'alt'}, 'j',
+    {'alt'}, 'left'
+  )
+
+  hotkeyBind(
+    {'alt'}, 'l',
+    {'alt'}, 'right'
+  )
+
+  -- hotkeyBind(
+  --   {'alt'}, 'i',
+  --   {'alt'}, 'up'
+  -- )
+
+  -- hotkeyBind(
+  --   {'alt'}, 'k',
+  --   {'alt'}, 'down'
+  -- )
+  
+end
+
+function hotkeyBind(fromModifier, fromKey, toModifier, toKey)
+  hs.hotkey.bind(fromModifier, fromKey, function() arrowKey(toKey, toModifier) end, nil, function() arrowKey(toKey, toModifier) end)
+end
+
+function hyperBind(fromModifier, fromKey, toModifier, toKey)
+  hyper:bind(fromModifier, fromKey, function() arrowKey(toKey, toModifier) end, nil, function() arrowKey(toKey, toModifier) end)
 end
 
 
@@ -132,4 +185,4 @@ function setUpAppBindings()
 end
 
 setUpAppBindings()
-setupArrowKeys()
+setupKeys()
